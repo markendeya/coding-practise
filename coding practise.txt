@@ -1,0 +1,1566 @@
+53. Maximum Subarray
+
+class Solution {
+    public int maxSubArray1(int[] nums) {
+
+        int max_sum =Integer.MIN_VALUE;
+        int max_here = 0;
+        for(int i=0;i<nums.length;i++){
+            max_here+=nums[i];
+            max_sum=Math.max(max_sum,max_here);
+            if(max_here<0)
+                max_here=0;
+        }
+        return max_sum;
+    }
+    //optimal solution
+        public int maxSubArray(int[] nums) {
+        // Initialize our variables using the first element.
+        int currentSubarray = nums[0];
+        int maxSubarray = nums[0];
+        
+        // Start with the 2nd element since we already used the first one.
+        for (int i = 1; i < nums.length; i++) {
+            int num = nums[i];
+            // If current_subarray is negative, throw it away. Otherwise, keep adding to it.
+            currentSubarray = Math.max(num, currentSubarray + num);
+            maxSubarray = Math.max(maxSubarray, currentSubarray);
+        }
+        
+        return maxSubarray;
+    }
+}
+============================================================================================
+73. Set Matrix Zeroes
+==========================
+class Solution {
+    public void setZeroes1(int[][] matrix) {
+        int row = matrix.length;
+        int col =matrix[0].length;
+        Set<Integer> row_set = new HashSet<Integer>();
+        Set<Integer> col_set = new HashSet<Integer>();
+        
+        for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++){
+                if(matrix[i][j]==0){
+                    row_set.add(i);
+                    col_set.add(j);
+                }
+            }
+        }
+        
+         for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++){
+                if(row_set.contains(i)|| col_set.contains(j)){
+                    matrix[i][j] =0;
+                }
+                
+            }
+         }
+        
+    }
+    
+     public void setZeroes(int[][] matrix) {
+         
+         int row = matrix.length;
+         int col = matrix[0].length;
+         boolean isCol =false;
+         for(int i=0;i<row;i++){
+             if(matrix[i][0] == 0)
+                 isCol=true;
+             for(int j=1;j<col;j++){
+                 if(matrix[i][j] == 0){
+                     matrix[i][0]=0;
+                     matrix[0][j]=0;
+                 }
+             }
+         }
+         
+         for(int i =row-1;i>=0;i--){
+             for(int j=col-1;j>=1;j--){
+                 if(matrix[i][0] == 0 || matrix[0][j] == 0){
+                     matrix[i][j] =0;
+                 }
+             }
+                if(isCol) matrix[i][0] =0;
+         }
+         
+     }
+}
+===========================================================================================================================================
+31. Next Permutation 
+class Solution {
+    public void nextPermutation(int[] nums) {
+         
+      int i = nums.length-2;
+        while(i>=0 && nums[i]>=nums[i+1])
+            i--;
+        int j =nums.length-1;
+        if(i>=0) {
+        while(j>=0 && nums[i]>=nums[j])
+            j--;
+        swap(nums,i,j);
+        }
+        reverse(nums,i+1,nums.length-1);
+        
+    }
+        
+        public void swap(int[] nums,int prev ,int curr){
+            int temp = nums[prev];
+            nums[prev]= nums[curr];
+            nums[curr] = temp;
+        }
+        
+        public void reverse(int[] nums,int start, int end){
+            while(start<end){
+                int temp1 = nums[start];
+                nums[start]=nums[end];
+                nums[end] = temp1;
+                start++;
+                end--;
+            }
+        }
+        
+}
+
+=====================================================================================================
+1572. Matrix Diagonal Sum
+class Solution {
+    public int diagonalSum(int[][] mat) {
+        int n =mat.length;
+        int sum =0;
+        for(int i=0;i<n;i++) {
+            //digonal left 00,11,22,33
+            sum+=mat[i][i];
+            
+            // to avoid dup adding and right diagonal 02,11//dup,20
+           if(i!=n-i-1)
+            sum+=mat[i][n-i-1];
+        }
+        return sum;
+    }
+}
+191. Number of 1 Bits
+public class Solution {
+    // you need to treat n as an unsigned value
+    public int hammingWeight(int n) {
+        int sum=0;
+        while(n!=0){
+            sum+=1;
+            n&=n-1;
+        }
+        return sum;
+    }
+}
+189. Rotate Array
+
+class Solution {
+    public void rotate(int[] nums, int k) {
+        int n =nums.length;
+        if(n<=1)
+            return;
+        if(n<k){
+          k=k%n;
+        }
+        
+        reverse(nums,n-k,n-1);
+        reverse(nums,0,n-1);
+        reverse(nums,k,n-1);
+    }
+    
+    public void reverse(int[] nums,int start,int end){
+        while(start<end){
+            int temp= nums[start];
+            nums[start]=nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }
+}
+=====================================================
+66. Plus One
+==================
+class Solution {
+    public int[] plusOne(int[] digits) {
+            
+        for(int i=digits.length-1;i>=0;i--){
+               if(digits[i] == 9)
+                   digits[i]=0;
+                else {
+                    digits[i]++;
+                    return digits;
+                }
+            
+            }
+         digits = new int[digits.length+1];
+            digits[0]=1;
+        return digits;
+    }
+}
+===========================================================
+350. Intersection of Two Arrays II
+========================================================
+public class Solution {
+    public int[] intersect(int[] nums1, int[] nums2) {
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        for(int i = 0; i < nums1.length; i++)
+        {
+            if(map.containsKey(nums1[i])) map.put(nums1[i], map.get(nums1[i])+1);
+            else map.put(nums1[i], 1);
+        }
+    
+        for(int i = 0; i < nums2.length; i++)
+        {
+            if(map.containsKey(nums2[i]) && map.get(nums2[i]) > 0)
+            {
+                result.add(nums2[i]);
+                map.put(nums2[i], map.get(nums2[i])-1);
+            }
+        }
+    
+       int[] r = new int[result.size()];
+       for(int i = 0; i < result.size(); i++)
+       {
+           r[i] = result.get(i);
+       }
+    
+	=========================
+	1582. Special Positions in a Binary Matrix
+	================================================
+	    public int numSpecial(int[][] mat) {
+        int m = mat.length, n = mat[0].length, res = 0, col[] = new int[n], row[] = new int[m];
+        for (int i = 0; i < m; i++) 
+            for (int j = 0; j < n; j++) 
+                if (mat[i][j] == 1){
+                    col[j]++;
+                    row[i]++;
+                } 
+        for (int i = 0; i < m; i++) 
+            for (int j = 0; j < n; j++) 
+                if (mat[i][j] == 1 && row[i] == 1 && col[j] == 1) res++;
+        return res;
+    }
+	
+	=================================================================================
+	2022. Convert 1D Array Into 2D Array
+	class Solution {
+    public int[][] construct2DArray(int[] original, int m, int n) {
+        int [][] mat = new int[m][n];
+        if(original.length!= (m*n))
+            return new int[][]{};
+        int count=0;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                mat[i][j]=original[count++];
+            }
+        }
+        return mat;
+    }
+    
+   }
+   ===============================================================================
+  240. Search a 2D Matrix II
+  ==================================================================
+	class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int row =matrix.length-1;int col =0;
+        
+        while(row>=0 && col<matrix[0].length){
+            if(matrix[row][col]>target)
+                row--;
+            else if(matrix[row][col] <target)
+                col++;
+            else
+                return true;
+        }
+        
+        return false;
+    }
+}
+
+============================================
+769. Max Chunks To Make Sorted
+=====================================
+class Solution {
+    public int maxChunksToSorted(int[] arr) {
+        int max=0;int count=0;
+        for(int i=0;i<arr.length;i++){
+            max=Math.max(max,arr[i]);
+            if( max== i){
+                count++;
+            }
+        }
+        return count;
+    }
+}
+======================================
+867. Transpose Matrix
+======================================
+class Solution {
+    public int[][] transpose(int[][] matrix) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+        int[][] ans = new int[col][row];
+        
+        for(int i=0;i< row;i++){
+            for(int j=0;j<col;j++){
+                ans[j][i]=matrix[i][j];
+            }
+        }
+        return ans;
+    }
+}
+=======
+1351. Count Negative Numbers in a Sorted Matrix
+=============
+  public int countNegatives(int[][] grid) {
+        int m = grid.length, n = grid[0].length, r = m - 1, c = 0, cnt = 0;
+        while (r >= 0 && c < n) {
+            if (grid[r][c] < 0) {
+                --r;
+                cnt += n - c; // there are n - c negative numbers in current row.
+            }else {
+                ++c;
+            }
+        }
+        return cnt;
+    }
+	
+=====================
+27. Remove Element
+=======================
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int count=0;
+        for(int i=0;i<nums.length;i++){
+            if(nums[i] != val){
+                nums[count] = nums[i];
+               count++;
+            }
+        }
+        return count;
+    }
+}
+==================================
+1979. Find Greatest Common Divisor of Array
+    public int findGCD(int[] nums) {
+        int max = 0;
+        int min = 1001;
+    
+        // Find the min and max from array
+        for(int e : nums){
+            max = Math.max(max,e);
+            min = Math.min(min,e);
+        }
+        return gcd(min, max);
+    }
+	
+	private int gcd(int a, int b) {
+		  if (b == 0) return a;
+		  return gcd(b, a % b);
+    }
+	}
+=====================
+1390. Four Divisors
+=======================
+class Solution {
+    public int sumFourDivisors(int[] nums) {
+         int totalSum =0;
+        for(int i=0;i<nums.length;i++){
+            int sum=0;
+            int count=0;
+            int num = (int)Math.sqrt(nums[i]);
+            for(int j=1;j<=num;j++){
+                if(nums[i]%j==0){
+                    count++;
+                    sum+=j;
+                    if(j!=nums[i]/j){
+                        count++;
+                        sum+=nums[i]/j;
+                    }
+                }
+            }
+            if(count == 4)
+                totalSum+=sum;
+        }
+        return totalSum;
+    }
+}
+==========================
+169. Majority Element
+===============================
+class Solution {
+    public int majorityElement(int[] nums) {
+        int count = 0;
+        Integer candidate = null;
+
+        for (int num : nums) {
+            if (count == 0) {
+                candidate = num;
+            }
+            count += (num == candidate) ? 1 : -1;
+        }
+
+        return candidate;
+    }
+}
+====================================
+202. Happy Number
+===================================
+class Solution {
+    
+    public int getNext(int n) {
+        int totalSum = 0;
+        while (n > 0) {
+            int d = n % 10;
+            n = n / 10;
+            totalSum += d * d;
+        }
+        return totalSum;
+    }
+    
+    public boolean isHappy(int n) {
+        while (n != 1 && n != 4) {
+            n = getNext(n);
+        }
+        return n == 1;
+    }
+}
+===========================================
+137.class Solution {
+    public int singleNumber(int[] nums) {
+        int ans=0;
+        for(int i=1;i<=32;i++){
+            int count=0;
+            for(int j=0;j<nums.length;j++){
+                int kBit = (nums[j]>>(i-1))&1;
+                if(kBit == 1)
+                    count++;
+            }
+            if(count%3==1)
+                ans=ans|1<<(i-1);
+        }
+        return ans;
+    }
+}
+=======================================
+class Solution {
+    public int search(int[] nums, int target) {
+        
+        int low =0;
+        int high = nums.length-1;
+        while(low<=high){
+            int mid = low+(high-low)/2;
+            
+            if(nums[mid] ==  target)
+                return mid;
+            else if(nums[mid]>=nums[low]){
+                if(target>=nums[low] && target<=nums[mid]){
+                    high=mid-1;
+                } else{
+                    low = mid+1;
+                }
+            } else{
+                if(target>=nums[mid] && target<= nums[high]){
+                    low =mid+1;
+                } else{
+                    high= mid-1;
+                }
+            }
+        }
+         return -1;
+    }
+}
+==================================================
+34. Find First and Last Position of Element in Sorted Array
+public class Solution {
+public int[] searchRange(int[] nums, int target) {
+    int[] result = new int[2];
+    result[0] =find(nums,target,true);
+    result[1] = find(nums, target,false);
+    return result;
+}
+
+private int find(int[] nums, int target,boolean leftSide){
+    int idx = -1;
+    int start = 0;
+    int end = nums.length - 1;
+    while( start<= end ){
+        int mid=start+(end-start)/2;
+        if(nums[mid]> target){
+            end = mid-1;
+        }else if(nums[mid]<target){
+            start = mid+1;
+        }else{
+            idx=mid;
+            if(leftSide)
+                end=mid-1;
+            else
+                start=mid+1;
+        }
+        
+    }
+    return idx;
+}
+}
+====================================
+162. Find Peak Element
+class Solution {
+    public int findPeakElement(int[] nums) {
+        if(nums.length==2){
+            if(nums[0]>nums[1])
+                return 0;
+                else
+                    return 1;
+        }
+        int low = 0;
+        int high = nums.length-1;
+        while(low<high){
+            int mid=low+(high-low)/2;
+             int mid1=mid+1;
+            if(nums[mid]<nums[mid1]){
+                low=mid1;
+            }else{
+                high=mid;
+            }
+        }
+         return low;
+    }
+}
+==================================
+162. Find Peak Element
+if(nums.length == 1) return 0; // single element
+        
+        int n = nums.length;
+        
+		// check if 0th/n-1th index is the peak element
+        if(nums[0] > nums[1]) return 0;
+        if(nums[n-1] > nums[n-2]) return n-1;
+		
+		// search in the remaining array
+        int start = 1;
+        int end = n-2;
+        
+        while(start <= end) {
+            int mid = start + (end - start)/2;
+            if(nums[mid] > nums[mid-1] && nums[mid] > nums[mid+1]) return mid;
+            else if(nums[mid] < nums[mid-1]) end = mid - 1;
+            else if(nums[mid] < nums[mid+1]) start = mid + 1;
+        }
+        return -1; // dummy return statement
+=============================================
+74. Search a 2D Matrix
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        
+        int row = matrix.length-1;
+        int col = matrix[0].length;
+        int colstart =0;
+        while(row>=0 && colstart<col){
+            if(matrix[row][colstart]== target){
+                return true;
+            }else if( matrix[row][colstart] > target){
+                row--;
+            }else{
+                colstart++;
+            }
+        }
+        return false;
+    }
+}
+=================================================
+46. Permutations
+================================================
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> ds = new ArrayList<>();
+        boolean[] freq = new boolean[nums.length];
+        recursion(nums,ans,ds,freq);
+        return ans;
+        
+    }
+    private void recursion(int[] nums,List<List<Integer>> ans, List<Integer> ds,boolean[] freq){
+        if(nums.length == ds.size()){
+            ans.add(new ArrayList<Integer>(ds));
+            return;
+        }
+        
+        for(int i=0;i<nums.length;i++){
+            if(!freq[i]){
+                ds.add(nums[i]);
+                freq[i]=true;
+                recursion(nums,ans,ds,freq);
+                ds.remove(ds.size()-1);
+                freq[i]=false;
+            }
+        }
+    }
+}
+=======================================================================================
+78. Subsets
+================
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> ans =new ArrayList<>();
+        List<Integer> ds = new ArrayList<>();
+        backtracking(nums,ans,ds,0);
+        return ans;
+    }
+    private void backtracking(int[] nums,List<List<Integer>> ans,List<Integer> ds,int index){
+        
+        if(index>nums.length-1){
+            ans.add(new ArrayList<>(ds));
+            return;
+        }
+          ds.add(nums[index]);
+          backtracking(nums,ans,ds,index+1);
+          ds.remove(ds.size()-1);
+          backtracking(nums,ans,ds,index+1);
+    }
+}
+================================================================================
+47. Permutations II
+=============================================
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+         List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> ds = new ArrayList<>();
+        HashMap<Integer,Integer> hs = new HashMap<>();
+        for(int num:nums)
+            hs.put(num,hs.getOrDefault(num,0)+1);
+        permutation(ans,ds,hs,nums);
+        return ans;
+    }
+    
+    public void permutation(List<List<Integer>> ans,List<Integer> ds, HashMap<Integer,Integer> m, int[] nums){
+        
+        if(ds.size() == nums.length){
+            ans.add(new ArrayList<>(ds));
+            return;
+        }
+        
+        for( Map.Entry<Integer,Integer> map:m.entrySet()){
+            int num = map.getKey();
+            int count = map.getValue();
+            if(count == 0)
+                continue;
+            
+                ds.add(num);
+                m.put(num,count-1);
+                permutation(ans,ds,m,nums);
+                m.put(num,count);
+                ds.remove(ds.size()-1);
+
+        }
+    }
+}
+=======================================================================================
+39. Combination Sum
+=====================
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        
+       List<List<Integer>> ans = new ArrayList<>();
+       List<Integer> ds = new ArrayList<Integer>();
+        dfs(ans,ds,target,candidates,target,0);
+       return ans;
+    }
+    
+    private void dfs(List<List<Integer>> ans, List<Integer> ds ,int remaining,int[] nums,int target,int index){
+        
+        if(index>= nums.length)
+            return;
+        
+        if(remaining == 0) {
+            ans.add(new ArrayList<>(ds));
+            return;
+        }
+        if(remaining<0)
+            return;
+    
+            for(int i=index;i<nums.length;i++){
+                ds.add(nums[i]);
+                dfs(ans,ds,remaining-nums[i],nums,target,i);
+                ds.remove(ds.size()-1);
+            }
+    }
+}
+====================================================================
+216. Combination Sum III
+================================
+class Solution {
+    public List<List<Integer>> combinationSum3(int k, int n) {
+     List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> ds = new ArrayList<>();
+        dfs(k,n,ans,ds,1);
+        return ans;
+    }
+    private void dfs(int count,int remaining,List<List<Integer>> ans,List<Integer> ds,int index){
+        
+        if(count == ds.size() && remaining == 0){
+          ans.add(new ArrayList<>(ds));
+            return;
+        }
+        if(remaining<0 || count == ds.size() )
+            return;
+        for(int i=index;i<10;i++){
+            ds.add(i);
+            dfs(count,remaining-i,ans,ds,i+1);
+            ds.remove(ds.size()-1);
+        }
+    }
+}
+=====================================================================
+40. Combination Sum II
+class Solution {
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> ds = new ArrayList<>();
+        Arrays.sort(candidates);
+        dfs(candidates,target,0,ans,ds);
+        return ans;
+    }
+    
+    private void dfs(int[] nums,int remaining,int index,List<List<Integer>> ans,List<Integer> ds) {
+        if(remaining == 0){
+            ans.add(new ArrayList<Integer>(ds));
+            return;
+        }
+        if(remaining<0)
+            return;
+        for(int i =index;i<nums.length;i++){
+            if(i>index && nums[i]== nums[i-1])
+                continue;
+            ds.add(nums[i]);
+            dfs(nums,remaining-nums[i],i+1,ans,ds);
+            ds.remove(ds.size()-1);
+        }
+    }
+}
+=====================================================================================
+89. Gray Code
+======================
+class Solution {
+    public List<Integer> grayCode(int n) {
+        // step 1: append 0
+        // step2 : revise and append 1
+        List<String> mainAns = generate(n);
+        List<Integer> ans = new ArrayList<>();
+        for(int i=0;i<mainAns.size();i++){
+             String str2 = mainAns.get(i);
+            int count =0;
+            int sum = 0;
+             for(int j=str2.length()-1;j>=0;j--){
+                 String s1 = String.valueOf(str2.charAt(j));
+              int num =   Integer.parseInt(s1);
+               sum+= num*Math.pow(2,count++);
+             }
+            ans.add(sum);
+        }
+        
+        return ans;
+    }
+    
+    private List<String> generate(int n) {
+                if(n<=0)
+            return new ArrayList<>();
+        if(n==1){
+            List<String> ls = new ArrayList<>();
+            ls.add("0");
+            ls.add("1");
+            return ls;
+        }
+        
+        List<String> resAns = generate(n-1);
+        ArrayList<String> mainAns = new ArrayList<>();
+        for(int i=0;i<resAns.size();i++){
+            String str = "0" + resAns.get(i);
+            mainAns.add(str);
+        }
+        for(int i = resAns.size()-1;i>=0;i--){
+            String str1 = "1"+ resAns.get(i);
+            mainAns.add(str1);
+        }
+        return mainAns;
+    }
+}
+=========================================================================
+51)N-Queens
+============
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        
+        String matrix[][] = new String[n][n];
+                for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = ".";
+            }
+        }
+         List<List<String>> ans = new ArrayList<>();
+        queens(ans,matrix,0,n);
+       return ans;
+    }
+    
+    private void queens(List<List<String>> ans,String[][] matrix,int col,int n){
+        if(col>=n){
+            ans.add(createBoard(matrix,n));
+            return;  
+        }
+           
+        for(int row=0;row<n; row++){
+            if(isSafe(matrix,row,col,n)){
+                matrix[row][col]="Q";
+                queens(ans,matrix,col+1,n);
+                matrix[row][col]=".";
+            }
+        } 
+    }
+    
+    private boolean isSafe(String[][] mat,int row,int col,int n){
+        //row wise
+        for(int i=0;i<col;i++){
+            if("Q".equals(mat[row][i]))
+                return false;
+        }
+        
+        // diagonal wise left above row++ left++
+        for(int i=row,j=col;j>=0 && i>=0;i--,j--){
+            if("Q".equals(mat[i][j]))
+                return false;
+        }
+        // reverse diagonal left down row++ left--
+        for(int i=row,j=col;i<n && j>=0;i++,j--){
+            if("Q".equals(mat[i][j]))
+                return false;
+        }
+        
+        return true;
+        
+    }
+    
+        private List<String> createBoard(String[][] state,int n) {
+        List<String> board = new ArrayList<String>();
+        for (int row = 0; row <n; row++) {
+            String rowWise ="";
+            for (int col = 0; col <n; col++) {
+                rowWise+=state[row][col];
+            }
+            board.add(rowWise);
+        }
+        
+        return board;
+    }
+}
+=========================================================================
+611. Valid Triangle Number
+==============================
+class Solution {
+    public int triangleNumber(int[] nums) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        int count=0;
+        for(int k= n-1; k>1;k--){
+            int i=0;
+            int j = k-1;
+            while(i<j){
+                if(nums[i]+nums[j]>nums[k]){
+                    count+=j-i;
+                    j--;
+                }else{
+                    i++;
+                }
+            }
+        }
+        return count;
+    }
+}
+=======================================================================
+658. Find K Closest Elements
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+         int lo = 0;
+		int hi = arr.length - 1;
+		while (hi - lo >= k) {
+			if (Math.abs(arr[lo] - x) > Math.abs(arr[hi] - x)) {
+				lo++;
+			} else {
+				hi--;
+			}
+		}
+		List<Integer> result = new ArrayList<>(k);
+		for (int i = lo; i <= hi; i++) {
+			result.add(arr[i]);
+		}
+		return result;
+    }
+}
+===================================================================================
+->Largest subarray with 0 sum
+====================================
+class GfG
+{
+    int maxLen(int arr[], int n)
+    {
+       Map<Integer,Integer> map = new HashMap<>();
+       int sum=0;
+       int max=0;
+       for(int i=0;i<n;i++){
+           sum+=arr[i];
+           if(sum==0)
+              max = i+1;
+           Integer prev_ind = map.get(sum);
+           if(prev_ind != null)
+             max=Math.max(max,i- prev_ind);
+             else
+                map.put(sum,i);
+       }
+       
+       return max;
+    }
+}
+============================================================================
+242. Valid Anagram
+
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        
+        int[] alphabets = new int[26];  //increment
+        for(int i=0;i<s.length();i++){
+            alphabets[s.charAt(i)-'a']++;
+        }
+        
+       for(int i=0;i<t.length();i++){  // decrement
+            alphabets[t.charAt(i)-'a']--;
+        }
+        
+        for(int i=0;i<alphabets.length;i++){
+            if(alphabets[i]!=0) 
+                return false;
+
+        }
+        return true;
+    }
+}
+=========================================================
+1304. Find N Unique Integers Sum up to Zero
+========================================================
+class Solution {
+    public int[] sumZero(int n) {
+       int[] arr = new int[n];
+        
+        int left=0;
+        int right = n-1;
+        int start =1;
+        while(left<right){
+            arr[left++]=start;
+            arr[right--]=-start;
+            start++;
+        }
+        return arr;
+    }
+}
+===========================================================
+2103. Rings and Rods
+======================
+class Solution {
+    public int countPoints(String rings) {
+        Map<Integer,Set<Character>> m=new HashMap<>();
+        for(int i=0;i<rings.length();i=i+2){
+            char c=rings.charAt(i);
+            int index=(int)rings.charAt(i+1);
+            if(m.containsKey(index)){
+                Set<Character> x=m.get(index);
+                x.add(c);
+                m.put(index,x);
+            }else{
+                Set<Character> x=new HashSet<>();
+                x.add(c);
+                m.put(index,x);
+            }
+        }
+        int count=0;
+        for(Set<Character> k : m.values()){
+            if(k.size()==3) count++;
+        }
+        return count;
+    }
+}
+=====================================
+69) sqrt(x)
+=====================================
+Linear
+=======
+class Solution {
+    public int mySqrt(int x) {
+        
+        if(x<2)
+            return x;
+        long num;
+        for(int i=2;i<=x/2;i++){
+             num= (long)i*i;
+            if(num == x){
+                return i;
+            } else if(num>x)
+                return i-1;
+        }
+        return x/2;
+    }
+}
+Binary Search
+====================
+class Solution {
+    public int mySqrt(int x) {
+        
+        if(x<2)
+            return x;
+        long num;
+        int left = 2;
+        int right = x/2;
+        while(left<=right){
+         int mid = left+(right-left)/2;
+            num=(long)mid*mid;
+            if(num>x)
+                right=mid-1;
+            else if(num<x)
+                left=mid+1;
+            else
+                return mid;  
+        }
+        return right;
+}
+}
+===========================================================================
+171. Excel Sheet Column Number
+--------------------------------
+class Solution {
+    public int titleToNumber(String columnTitle) {
+
+      if(columnTitle.length()==0)
+            return 0;
+        int res=0;
+        int power=0;
+        for(int i=columnTitle.length()-1;i>=0;i--){
+		    int pow = Math.pow(26,power++);
+            res+=(columnTitle.charAt(i)-'A'+1)*pow;
+        }
+        
+        return res;
+        
+    }
+}
+-----------------
+public class Solution {
+    public int titleToNumber(String s) {
+        if (s == null) return -1;
+        int sum = 0;
+        // for each loop so we don't need to mess with index values.
+        for (char c : s.toUpperCase().toCharArray()) {
+            sum *= 26;
+            sum += c - 'A' + 1;
+        }
+        return sum;
+    }
+}
+==============================
+101. Symmetric Tree
+==============================
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+         return isMirror(root.left,root.right);
+    }
+    
+    public boolean isMirror(TreeNode p,TreeNode q){
+        if(p==null && q==null)
+            return true;
+        if(p==null || q==null)
+            return false;
+        return (p.val == q.val) && isMirror(p.left,q.right) && isMirror(p.right,q.left);
+    }
+}
+================================
+706. Design HashMap
+========================
+class MyHashMap {
+    
+    List<Node> ls;
+
+    public MyHashMap() {
+       ls = new LinkedList<>();
+    }
+    
+    public void put(int key, int value) {
+        boolean found =false;
+      for(Node data:ls){
+          if(data.key == key){
+              data.value=value;
+              found =true;
+          }
+      }
+          if(found == false)
+              ls.add(new Node(key,value));
+    }
+    
+    public int get(int key) {
+        for(Node data:ls){
+            if(data.key == key){
+                return data.value;
+            }
+        }
+        return -1;
+    }
+    
+    public void remove(int key) {
+        for(Node data:ls){
+            if(data.key == key){
+                ls.remove(data);
+                break;
+            }
+        }
+    }
+}
+==================================
+705. Design HashSet
+===========================================
+class MyHashSet {
+  List<Node> ls;
+    public MyHashSet() {
+        ls = new LinkedList<>();
+    }
+    
+    public void add(int key) {
+        boolean found = false;
+      for(Node data:ls){
+          if(data.key == key){
+              found = true;
+      }
+    }
+          if(!found){
+              ls.add(new Node(key));
+          }
+    }
+    
+    public void remove(int key) {
+        
+        for(Node data:ls){
+            if(data.key == key){
+            ls.remove(data);
+            break;
+            }
+        }
+    } 
+    
+    public boolean contains(int key) {
+       for(Node data:ls){
+            if(data.key == key)
+              return true;
+        }
+        return false;
+    }
+}
+
+class Node{
+    int key;
+    Node(int key){
+        this.key = key;
+    }
+}
+==========================================================================
+150. Evaluate Reverse Polish Notation
+=======================================
+class Solution {
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> st = new Stack<Integer>();
+        int a,b;
+        for(String token:tokens){
+            if(token.equals("+")){
+                a= st.pop();
+                b=st.pop();
+                st.add(a+b);
+            }else if(token.equals("-")){
+                b= st.pop();
+                a=st.pop();
+                st.add(a-b);
+            }else if(token.equals("*")){
+                a= st.pop();
+                b=st.pop();
+                st.add(a*b);
+            }else if(token.equals("/")){
+                b=st.pop();
+                a= st.pop();
+                st.add(a/b);
+            }else{
+                st.add(Integer.parseInt(token));
+            }
+        }
+        return st.pop();
+    }
+}
+==========================================================================
+155. Min Stack
+=======================================================
+class MinStack {
+
+    private Stack<Integer> stack = new Stack<>();
+    private Stack<Integer> minStack = new Stack<>();
+    
+    
+    public MinStack() { }
+    
+    
+    public void push(int x) {
+        stack.push(x);
+        if (minStack.isEmpty() || x <= minStack.peek()) {
+            minStack.push(x);
+        }
+    }
+    
+    
+    public void pop() {
+        if (stack.peek().equals(minStack.peek())) {
+            minStack.pop();
+        }
+        stack.pop();
+    }
+    
+    
+    public int top() {
+        return stack.peek();
+    }
+
+    
+    public int getMin() {
+        return minStack.peek();
+    }
+}
+--------------------------------------------------------
+class MinStack {
+    private Node head;
+
+    public MinStack() {
+    }
+    
+    public void push(int val) {
+       if(head==null)
+           head = new Node(val,val,head);
+        else
+            head = new Node(val,Math.min(val,head.min),head);
+    }
+    
+    public void pop() {
+        head=head.next;
+    }
+    
+    public int top() {
+       return head.val;
+    }
+    
+    public int getMin() {
+      return head.min;  
+    }
+}
+
+class Node{
+    int val;
+    int min;
+    Node next;
+    
+    Node(int val,int min,Node next){
+        this.val=val;
+        this.min=min;
+        this.next=next;
+    }
+}
+
+===========================================================================
+239. Sliding Window Maximum
+=================================
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        
+        ArrayDeque<Integer> dq = new ArrayDeque<Integer>();
+        
+        int n=nums.length;
+        int ans[] = new int[n-k+1];
+        int count=0;
+       for(int i=0; i<k; i++) {
+           
+           while(!dq.isEmpty() && dq.peekLast()<nums[i]){
+               dq.pollLast();
+           }
+           dq.add(nums[i]);
+       }
+        ans[count++] = dq.peek();
+        for(int i=k;i<nums.length;i++){
+            if(dq.peek() == nums[i-k])
+                dq.poll();
+            while( !dq.isEmpty() && nums[i]>dq.peekLast()){
+                dq.pollLast();
+            }
+            dq.add(nums[i]);
+            ans[count++] =  dq.peek();
+        }
+        return ans;
+        
+    }
+}
+============================================================================
+225. Implement Stack using Queues
+===================================
+class MyStack {
+    Queue<Integer> q = new LinkedList<Integer>();
+    
+    // Push element x onto stack.
+    public void push(int x) {
+        q.add(x);
+        
+        int n = q.size();
+        while (n-- > 1)
+            q.add(q.poll());
+    }
+
+    // Removes the element on top of the stack.
+    public void pop() {
+        q.poll();
+    }
+
+    // Get the top element.
+    public int top() {
+        return q.peek();
+    }
+
+    // Return whether the stack is empty.
+    public boolean empty() {
+        return q.isEmpty();
+    }
+
+  }
+  =================================================================
+  232. Implement Queue using Stacks
+  ----------------------------------------------
+  class MyQueue {
+    Stack<Integer> st = new Stack<Integer>();
+
+    public MyQueue() {
+        
+    }
+    
+    public void push(int x) {
+        Stack<Integer> temp = new Stack<Integer>();
+        while( !st.isEmpty()){
+            temp.add(st.pop());
+        }
+        st.add(x);
+        while(!temp.isEmpty()){
+            st.add(temp.pop());
+        }
+    }
+    
+    public int pop() {
+        return st.pop();
+    }
+    
+    public int peek() {
+        return st.peek();
+    }
+    
+    public boolean empty() {
+        return st.isEmpty();
+    }
+}
+===========================================
+575. Distribute Candies
+==========================================
+
+class Solution {
+    public int distributeCandies(int[] candyType) {
+        HashSet<Integer> hs = new HashSet<Integer>();
+        int n= candyType.length;
+        for(int i=0;i<candyType.length;i++){
+            hs.add(candyType[i]);
+        }
+        int maxDiffCandies = hs.size();
+        return n/2 < maxDiffCandies ? n/2 : maxDiffCandies;
+        
+    }
+}
+======================================================================
+463. Island Perimeter
+==============================
+class Solution {
+    public int islandPerimeter(int[][] grid) {
+        
+        int row = grid.length;
+        int col = grid[0].length;
+        int islands =0;
+        int neighbours=0;
+        
+        for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++){
+                if(grid[i][j] == 1){
+                    islands++;
+                    if(i<row-1 && grid[i+1][j] == 1)
+                        neighbours++;
+                    if(j<col-1 && grid[i][j+1] == 1)
+                        neighbours++;
+                }
+            }
+        }
+        return 4*islands - 2*neighbours;
+    }
+}
+=========================================
+1160. Find Words That Can Be Formed by
+ Characters
+ ========================================
+     public int countCharacters(String[] words, String chars) {
+        Map<Character,Integer> hm = new HashMap<Character,Integer>();
+        Map<Character,Integer> map;
+        int count=0;
+        for(int i=0;i<chars.length();i++){
+         hm.put(chars.charAt(i),hm.getOrDefault(chars.charAt(i),0)+1);
+        }
+        
+        for(int i=0;i<words.length;i++){
+            String str = words[i];
+            int wordCount =0;
+            map=new HashMap<Character,Integer>(hm);
+            for(int j=0;j<str.length();j++){
+                if(map.containsKey(str.charAt(j)) && map.get(str.charAt(j))>0){
+                    map.put(str.charAt(j),map.get(str.charAt(j))-1);
+                    wordCount++;
+                }
+            }
+            if(wordCount== str.length())
+                count+=wordCount;
+        }
+        return count;
+        
+        
+    }
+}
+----------------
+1160. Find Words That Can Be Formed by
+ Characters
+ -----------------------------
+    public int countCharacters(String[] words, String chars) {
+        HashMap<Character, Integer> countMap = new HashMap<>();
+        for (char c : chars.toCharArray()) {
+            countMap.put(c, countMap.getOrDefault(c, 0) + 1);
+        }
+        int res = 0;
+        HashMap<Character, Integer> copyMap;
+        for (String word : words) {
+            copyMap = (HashMap<Character, Integer>) countMap.clone();
+            boolean fail = false;
+            for (char c : word.toCharArray()) {
+                if (copyMap.get(c) == null || copyMap.get(c) <= 0) {
+                    fail = true;
+                    break;
+                } else {
+                    copyMap.put(c, copyMap.get(c) - 1);
+                }
+            }
+            if (!fail) res += word.length();
+        }
+        return res;
+    }
+====================================
+1002. Find Common Characters
+--------------------------------------
+class Solution {
+    public List<String> commonChars(String[] words) {
+       List<String> ans = new ArrayList<String>();
+        int[] commonFreq = new int[26];
+        Arrays.fill(commonFreq,Integer.MAX_VALUE);
+        
+        for(int i=0;i<words.length;i++){
+            int[] freq = new int[26];
+            char[] chArr = words[i].toCharArray();
+            for(int j=0;j<chArr.length;j++){
+                freq[chArr[j]-'a']++;
+            }
+            for(int k=0;k<26;k++){
+                commonFreq[k]=Math.min(commonFreq[k],freq[k]);
+            }
+        }
+        
+        for(int i=0;i<26;i++){
+            while(commonFreq[i]>0){
+               ans.add(""+(char)('a'+i));
+                commonFreq[i]--;
+            }
+        }
+        return ans;
+    }
+} 
+==================================================================================
+961. N-Repeated Element in Size 2N Array
+------------------------------------------------
+class Solution {
+    public int repeatedNTimes(int[] nums) {
+        Map<Integer,Integer> map = new HashMap<Integer,Integer>();
+        
+        for(int i=0;i<nums.length;i++){
+            map.put(nums[i],map.getOrDefault(nums[i],0)+1);
+        }
+        for(Map.Entry<Integer,Integer> m : map.entrySet()){
+            
+            if(m.getValue()==nums.length/2){
+                return m.getKey();
+            }
+        }
+        return -1;
+    }
+}
+------------------------------------------
+    public int repeatedNTimes(int[] A) {
+        int[] count = new int[10000];
+        for (int a : A)
+            if (count[a]++ == 1)
+                return a;
+        return -1;
+    }
+-----------------------------------------------------
+-------------------------------------------------------------------
+1207. Unique Number of Occurrences
+------------------------------------
+class Solution {
+    public boolean uniqueOccurrences(int[] arr) {
+        // Store the frequency of elements in the unordered map.
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : arr) {
+            freq.put(num, freq.getOrDefault(num, 0) + 1);
+        }
+        
+        // Store the frequency count of elements in the unordered set.
+        Set<Integer> freqSet = new HashSet<>(freq.values());
+        
+        // If the set size is equal to the map size, 
+        // It implies frequency counts are unique.
+        return freq.size() == freqSet.size();
+    }
+}
+=====================================================================
+108. Convert Sorted Array to Binary Search Tree
+---------------------------------------------------------
+class Solution {
+    public TreeNode sortedArrayToBST(int[] nums) {
+        
+        return  converSortedArrToBst(nums,0,nums.length-1);
+    }
+    
+    private TreeNode converSortedArrToBst(int[] nums, int left,int right) {
+        if(left>right)
+            return null;
+        int mid =(left+(right-left)/2);
+        
+        TreeNode node = new TreeNode(nums[mid]);
+        node.left = converSortedArrToBst(nums,left,mid-1);
+        node.right = converSortedArrToBst(nums,mid+1,right);
+        return node;
+    }
+}
